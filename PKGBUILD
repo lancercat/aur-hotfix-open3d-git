@@ -33,6 +33,8 @@ optdepends=(
 )
 makedepends=(
   cmake
+  automake
+  autoconf
   git
   "${_py}-setuptools"
 )
@@ -62,9 +64,10 @@ function prepare() {
           --input="${srcdir}/fixass.patch"
     git submodule update --init \
                          --recursive
-    find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
-    grep --files-with-matches -r "_FORTIFY_SOURCE" | xargs -I {} sed -i 's/_FORTIFY_SOURCE=[0-9]/""/g' {}
-    mkdir build
+
+#     find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
+#     grep --files-with-matches -r "_FORTIFY_SOURCE" | xargs -I {} sed -i 's/_FORTIFY_SOURCE=[0-9]/""/g' {}
+#     mkdir build
 }
 
 function build() {
@@ -73,6 +76,34 @@ function build() {
     -DBUILD_SHARED_LIBS=ON
     -DCMAKE_BUILD_TYPE=Release
     -DBUILD_ISPC_MODULE=OFF
+    -G "Unix Makefiles"
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DBUILD_SHARED_LIBS=ON
+    -DCMAKE_VERBOSE_MAKEFILE=ON
+    -DCMAKE_MODULE_PATH=/usr/lib/cmake/OpenVDB
+    -DCMAKE_FIND_ROOT_PATH=/opt/intel/oneapi/tbb/latest/lib/cmake/tbb
+    -DUSE_SYSTEM_ASSIMP=ON
+    -DUSE_SYSTEM_CURL=ON
+    -DUSE_SYSTEM_BLAS=OFF
+    -DBUILD_SYCL_MODULE=OFF
+    -DUSE_SYSTEM_EIGEN3=ON
+    -DUSE_SYSTEM_EMBREE=ON
+    -DUSE_SYSTEM_TBB=ON
+    -DOPEN3D_USE_ONEAPI_PACKAGES=ON
+    -DoneDPL_DIR=/opt/intel/oneapi/dpl/latest/lib/cmake/oneDPL
+    -DMKL_DIR=/opt/intel/oneapi/mkl/latest/lib/cmake/mkl
+    -DUSE_SYSTEM_FMT=ON
+    -DUSE_SYSTEM_GLEW=ON
+    -DUSE_SYSTEM_GLFW=ON
+    -DUSE_SYSTEM_GOOGLETEST=ON
+    -DUSE_SYSTEM_JPEG=ON
+    -DUSE_SYSTEM_NANOFLANN=ON
+    -DUSE_SYSTEM_PNG=ON
+    -DUSE_SYSTEM_PYBIND11=ON
+    -DUSE_SYSTEM_QHULLCPP=ON
+    -DUSE_SYSTEM_VTK=ON
+    -DUSE_SYSTEM_JSONCPP=OFF
+    -DBUILD_LIBREALSENSE=ON
   )
   cd "${srcdir}/${pkgbase}/build"
   cmake .. "${_cmake_opts[@]}"
