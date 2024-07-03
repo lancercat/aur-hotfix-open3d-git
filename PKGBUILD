@@ -65,9 +65,9 @@ function prepare() {
     git submodule update --init \
                          --recursive
 
-#     find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
-#     grep --files-with-matches -r "_FORTIFY_SOURCE" | xargs -I {} sed -i 's/_FORTIFY_SOURCE=[0-9]/""/g' {}
-#     mkdir build
+    find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
+    grep --files-with-matches -r "_FORTIFY_SOURCE" | xargs -I {} sed -i 's/_FORTIFY_SOURCE=[0-9]/""/g' {}
+    mkdir build
 }
 
 function build() {
