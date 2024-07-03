@@ -62,6 +62,8 @@ function prepare() {
           --input="${srcdir}/fixass.patch"
     git submodule update --init \
                          --recursive
+    find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
+    grep --files-with-matches -r "_FORTIFY_SOURCE" | xargs -I {} sed -i 's/_FORTIFY_SOURCE=[0-9]/""/g' {}
     mkdir build
 }
 
@@ -70,10 +72,11 @@ function build() {
     -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     -DBUILD_SHARED_LIBS=ON
     -DCMAKE_BUILD_TYPE=Release
+    -DBUILD_ISPC_MODULE=OFF
   )
   cd "${srcdir}/${pkgbase}/build"
   cmake .. "${_cmake_opts[@]}"
-  make
+  make -j10
 }
 
 function package_open3d-git() {
